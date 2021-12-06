@@ -14,7 +14,6 @@ public class HiloServer implements Runnable{
     private static final String[] PROTOCOLOS = new String[] {"TLSv1.3"};
     public static SSLServerSocket serverSocket;
     public static SSLServerSocketFactory socketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-
     public static Socket socket = null;
     public HiloServer(){}
 

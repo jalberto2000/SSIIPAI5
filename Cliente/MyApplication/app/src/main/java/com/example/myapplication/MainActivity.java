@@ -23,8 +23,8 @@ import javax.net.ssl.SSLSocketFactory;
 public class MainActivity extends AppCompatActivity {
 
     // Setup Server information
-    protected static String server = "192.168.1.133";
-    protected static int port = 7070;
+    protected static String server = "localhost";
+    protected static int port = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +91,14 @@ public class MainActivity extends AppCompatActivity {
                                     // 3. Enviar los datos
                                     try {
 
+                                        System.setProperty("javax.net.ssl.trustStore", "C:\\Users\\a-l-f\\Desktop\\SSII\\Practicas\\SSIIPAI5\\keystore.jks");
+                                        System.setProperty("javax.net.ssl.trustStorePassword", "equipo2");
+                                        System.setProperty("javax.net.debug", "all");
+
                                         // create SSLSocket from factory
                                         SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-                                        SSLSocket socket = (SSLSocket) socketFactory.createSocket("localhost", 10000);
+                                        SSLSocket socket = (SSLSocket) socketFactory.createSocket("192.168.56.1", 10000);
+                                        Toast.makeText(getApplicationContext(), "ha llegado aqui", Toast.LENGTH_SHORT).show();
                                         System.out.println(socket.getSession().getProtocol());
                                         // create PrintWriter for sending login to server
                                         PrintWriter output = new PrintWriter(new OutputStreamWriter(
@@ -114,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                                     // handle exception communicating with server
                                     catch (IOException ioException) {
                                         ioException.printStackTrace();
+                                        Toast.makeText(getApplicationContext(), ioException.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                     Toast.makeText(MainActivity.this, "Mesaje enviado", Toast.LENGTH_SHORT).show();
                                 }

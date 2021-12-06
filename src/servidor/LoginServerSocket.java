@@ -5,6 +5,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 
 
 public class LoginServerSocket {
@@ -19,9 +23,27 @@ public class LoginServerSocket {
             // open PrintWriter for writing data to client
             PrintWriter output = new PrintWriter(new
                     OutputStreamWriter(socket.getOutputStream()));
-
-            String message = input.readLine();
-            System.out.println(message);
+            String[] message = input.readLine().split(" "); //RECIBO MENSAJE DE LA FORMA MENSAJE CLAVE FIRMA
+            PublicKey clavePublica = null;
+            if(message.length == 3){
+                //TODO ALMACENAR LA CLAVE PUBLICA EN LA BASE DE DATOS
+                clavePublica = KeyFactory.getInstance("RSA"). //OBTENGO LA CLAVE PUBLICA
+                        generatePublic(new X509EncodedKeySpec(message[1].getBytes(StandardCharsets.UTF_8)));
+            }else if(message.length == 2){
+                //TODO OBTENER LA CLAVE PUBLICA DE LA BASE DE DATOS
+            }else{
+                System.out.println("ERROR EN EL PAQUETE");
+            }
+            Signature sg = Signature.getInstance("SHA256withRSA");
+            sg.initVerify(clavePublica);
+            sg.update(message[0].getBytes());
+            Boolean mensajeVerificado = sg.verify(message[2].getBytes()); //USO LA FIRMA PARA VERIFICAR EL MENSAJE
+            if(mensajeVerificado){
+                //TODO RESPONDER AL CLIENTE DICIENDO QUE SU MENSAJE SE HA VERIFICADO
+            }else{
+                //TODO RESPONDER AL CLIENTE DICIENDO QUE SU MENSAJE NO HA PODIDO SER VERIFICADO
+            }
+            System.out.println(message[0]);
             output.println("El mensaje ha sido guardado correctamente");
             output.close();
             input.close();
@@ -30,7 +52,7 @@ public class LoginServerSocket {
         } // end try
 
         // handle exception communicating with client
-        catch (IOException ioException) {
+        catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | SignatureException ioException) {
             ioException.printStackTrace();
         }
 

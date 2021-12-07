@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.os.StrictMode.ThreadPolicy;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,11 +25,13 @@ import javax.net.ssl.SSLSocketFactory;
 public class MainActivity extends AppCompatActivity {
 
     // Setup Server information
-    protected static String server = "localhost";
+    protected static String server = "192.168.0.109";
     protected static int port = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThreadPolicy plc = new ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(plc);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -89,15 +93,14 @@ public class MainActivity extends AppCompatActivity {
                                     // 2. Firmar los datos
 
                                     // 3. Enviar los datos
-                                    try {
-
-                                        System.setProperty("javax.net.ssl.trustStore", "C:\\Users\\a-l-f\\Desktop\\SSII\\Practicas\\SSIIPAI5\\keystore.jks");
-                                        System.setProperty("javax.net.ssl.trustStorePassword", "equipo2");
-                                        System.setProperty("javax.net.debug", "all");
+                                    try  {
+                                        //System.setProperty("javax.net.ssl.trustStore", "C:\\Users\\alber\\Desktop\\PAI5\\SSIIPAI5\\Cliente\\MyApplication\\app\\src\\main\\res\\raw\\keystore.jks");
+                                        //System.setProperty("javax.net.ssl.trustStorePassword", "equipo2");
+                                        //System.setProperty("javax.net.debug", "all");
 
                                         // create SSLSocket from factory
                                         SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-                                        SSLSocket socket = (SSLSocket) socketFactory.createSocket("192.168.56.1", 10000);
+                                        SSLSocket socket = (SSLSocket) socketFactory.createSocket(server, 10000);
                                         Toast.makeText(getApplicationContext(), "ha llegado aqui", Toast.LENGTH_SHORT).show();
                                         System.out.println(socket.getSession().getProtocol());
                                         // create PrintWriter for sending login to server

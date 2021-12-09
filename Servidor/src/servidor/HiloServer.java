@@ -20,6 +20,8 @@ public class HiloServer implements Runnable{
 
     @Override
     public void run() {
+        System.setProperty("javax.net.ssl.keyStore", "C:/Users/alber/Desktop/PAI5/SSIIPAI5/Servidor/keystore.jks");
+        System.setProperty("javax.net.ssl.keyStorePassword", "equipo2");
         try{
 
             LoginServerSocket.logicaServidor(socket);
@@ -32,9 +34,8 @@ public class HiloServer implements Runnable{
     }
 
     public static void main(String[] args) throws IOException{
-        System.setProperty("javax.net.ssl.keyStore", "../../keystore.jks");
-        System.setProperty("javax.net.ssl.keyStorePassword", "equipo2");
-        serverSocket = (SSLServerSocket) socketFactory.createServerSocket(10000);
+
+        ServerSocket serverSocket = new ServerSocket(10000);
     while(true){
         System.err.println("Waiting for connection...");
         socket = serverSocket.accept();

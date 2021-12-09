@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
-
+import java.util.Arrays;
 
 public class LoginServerSocket {
 
@@ -23,12 +23,16 @@ public class LoginServerSocket {
             // open PrintWriter for writing data to client
             PrintWriter output = new PrintWriter(new
                     OutputStreamWriter(socket.getOutputStream()));
-            String[] message = input.readLine().split(" "); //RECIBO MENSAJE DE LA FORMA MENSAJE CLAVE FIRMA
+            String[] message = input.readLine().split(","); //RECIBO MENSAJE DE LA FORMA MENSAJE CLAVE FIRMA
+            System.out.println(Arrays.toString(message));
             PublicKey clavePublica = null;
+
             if(message.length == 3){
+
                 //TODO ALMACENAR LA CLAVE PUBLICA EN LA BASE DE DATOS
-                clavePublica = KeyFactory.getInstance("RSA"). //OBTENGO LA CLAVE PUBLICA
-                        generatePublic(new X509EncodedKeySpec(message[1].getBytes(StandardCharsets.UTF_8)));
+                //clavePublica = KeyFactory.getInstance("RSA"). //OBTENGO LA CLAVE PUBLICA
+                        //KeyFactory.getInstance("RSA").generatePublic();
+
             }else if(message.length == 2){
                 //TODO OBTENER LA CLAVE PUBLICA DE LA BASE DE DATOS
             }else{
@@ -52,7 +56,7 @@ public class LoginServerSocket {
         } // end try
 
         // handle exception communicating with client
-        catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | SignatureException ioException) {
+        catch (IOException | NoSuchAlgorithmException | InvalidKeyException | SignatureException ioException) {
             ioException.printStackTrace();
         }
 

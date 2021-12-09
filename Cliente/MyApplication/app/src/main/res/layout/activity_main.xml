@@ -51,6 +51,22 @@
         android:minHeight="48dp"
         android:text="0" />
 
+    <EditText
+        android:id="@+id/nombreUsuario"
+        android:layout_width="289dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cantidadArmarios"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="27dp"
+        android:layout_marginLeft="27dp"
+        android:layout_marginTop="113dp"
+        android:ems="10"
+        android:inputType="number"
+        android:minHeight="48dp"
+        android:text="Numero de usuario" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"

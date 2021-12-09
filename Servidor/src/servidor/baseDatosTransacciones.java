@@ -1,4 +1,4 @@
-package basedatos;
+package servidor;
 
 import java.sql.*;
 
@@ -6,7 +6,7 @@ public class baseDatosTransacciones {
 
     public static void insertTransaction(String transactions,Boolean validity){
         // Aqui se pone la ruta de la base de datos
-        String jdbcUrl = "jdbc:sqlite:.\\transactions.db";
+        String jdbcUrl = "jdbc:sqlite:src/servidor/transactions.db";
         Integer b = 0;
         if (validity){
             b = 1;
@@ -23,7 +23,7 @@ public class baseDatosTransacciones {
     }
 
     public static void main ( String args[] ) {
-        String jdbcUrl = "jdbc:sqlite:.\\transactions.db";
+        String jdbcUrl = "jdbc:sqlite:src/servidor/transactions.db";
         //insertTransaction("transaccionValida", true);
         try {
             Connection connection = DriverManager.getConnection(jdbcUrl);

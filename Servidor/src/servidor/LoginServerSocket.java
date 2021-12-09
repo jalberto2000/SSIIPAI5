@@ -23,10 +23,9 @@ public class LoginServerSocket {
             // open PrintWriter for writing data to client
             PrintWriter output = new PrintWriter(new
                     OutputStreamWriter(socket.getOutputStream()));
-            String[] message = input.readLine().split(","); //RECIBO MENSAJE DE LA FORMA MENSAJE CLAVE FIRMA
+            String[] message = input.readLine().split(" "); //RECIBO MENSAJE DE LA FORMA MENSAJE CLAVE FIRMA
             System.out.println(Arrays.toString(message));
             PublicKey clavePublica = null;
-
             if(message.length == 3){
 
                 //TODO ALMACENAR LA CLAVE PUBLICA EN LA BASE DE DATOS

@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setTitle("Enviar")
                     .setMessage("Se va a proceder al envio")
-                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setIcon(R.drawable.ic_launcher_foreground)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
 

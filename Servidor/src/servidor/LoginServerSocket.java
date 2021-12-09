@@ -24,28 +24,32 @@ public class LoginServerSocket {
             PrintWriter output = new PrintWriter(new
                     OutputStreamWriter(socket.getOutputStream()));
             String[] message = input.readLine().split(" "); //RECIBO MENSAJE DE LA FORMA MENSAJE CLAVE FIRMA
+            String[] datos = message[0].split(","); //DENTRO DEL MENSAJE APARECE NUMEROSILLAS,NUMEROMESAS,NUMEROARMARIOS,NUMEROESTANTERIAS,NOMBREUSUARIO
             System.out.println(Arrays.toString(message));
-            PublicKey clavePublica = null;
-            if(message.length == 3){
+            String usuario = datos[4];
+            if(baseDatosUsuarios.getKey(usuario)== null){
+                baseDatosUsuarios.insertUser(usuario, message[1]);
+            }else {
+                if (baseDatosUsuarios.getKey(usuario).equals(message[1])) {
 
-                //TODO ALMACENAR LA CLAVE PUBLICA EN LA BASE DE DATOS
-                //clavePublica = KeyFactory.getInstance("RSA"). //OBTENGO LA CLAVE PUBLICA
-                        //KeyFactory.getInstance("RSA").generatePublic();
+                    Signature sg = Signature.getInstance("SHA256withRSA");
+                    PublicKey clavePublica = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(message[1].getBytes(StandardCharsets.UTF_8)));
+                    sg.initVerify(clavePublica);
+                    sg.update(message[0].getBytes());
+                    Boolean mensajeVerificado = sg.verify(message[2].getBytes()); //USO LA FIRMA PARA VERIFICAR EL MENSAJE
+                    if (mensajeVerificado) {
+                        //TODO RESPONDER AL CLIENTE DICIENDO QUE SU MENSAJE SE HA VERIFICADO
+                        baseDatosTransacciones.insertTransaction(message[0], Boolean.TRUE);
+                    } else {
+                        //TODO RESPONDER AL CLIENTE DICIENDO QUE SU MENSAJE NO HA PODIDO SER VERIFICADO
+                        baseDatosTransacciones.insertTransaction(message[0], Boolean.FALSE);
+                    }
+                } else {
+                    baseDatosTransacciones.insertTransaction(message[0], Boolean.FALSE);
+                    throw new Exception("FALLO EN LA VERIFICACION DEL USUARIO");
+                }
+            }
 
-            }else if(message.length == 2){
-                //TODO OBTENER LA CLAVE PUBLICA DE LA BASE DE DATOS
-            }else{
-                System.out.println("ERROR EN EL PAQUETE");
-            }
-            Signature sg = Signature.getInstance("SHA256withRSA");
-            sg.initVerify(clavePublica);
-            sg.update(message[0].getBytes());
-            Boolean mensajeVerificado = sg.verify(message[2].getBytes()); //USO LA FIRMA PARA VERIFICAR EL MENSAJE
-            if(mensajeVerificado){
-                //TODO RESPONDER AL CLIENTE DICIENDO QUE SU MENSAJE SE HA VERIFICADO
-            }else{
-                //TODO RESPONDER AL CLIENTE DICIENDO QUE SU MENSAJE NO HA PODIDO SER VERIFICADO
-            }
             System.out.println(message[0]);
             output.println("El mensaje ha sido guardado correctamente");
             output.close();
@@ -57,6 +61,8 @@ public class LoginServerSocket {
         // handle exception communicating with client
         catch (IOException | NoSuchAlgorithmException | InvalidKeyException | SignatureException ioException) {
             ioException.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     } // end
